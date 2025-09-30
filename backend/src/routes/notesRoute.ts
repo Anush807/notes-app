@@ -116,6 +116,56 @@ notesRoute.put("/editnote/:id", async (c) => {
     }
 })
 
-// notesRoute.get("/bulk", async (c) =>{
-//     const id = c.req.param("")
-// })
+notesRoute.get("/bulk", async (c) => {
+    try {
+        const id = c.get("userId");
+        const prisma = new PrismaClient({
+            datasourceUrl: c.env.DATABASE_URL
+        }).$extends(withAccelerate())
+        try {
+            const notes = await prisma.notes.findMany({
+                where: {
+                    creatorId: id
+                },
+                select: {
+                    title: true,
+                    content: true,
+                }
+            })
+            return c.json({
+                message: "Your notes",
+                notes
+            })
+        } catch (err) {
+            return c.json({
+                error: err
+            })
+        }
+
+    } catch (err) {
+        return c.json({
+            error: err
+        })
+    }
+})
+
+notesRoute.delete("/:id", async (c) =>{
+    const id = c.req.param("id");
+     const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL
+     }).$extends(withAccelerate())
+     try{
+        await prisma.notes.delete({
+            where:{
+                id: id
+            }
+        })
+        return c.json({
+            message: "notes deleted successfully"
+        })
+     }catch(err){
+        return c.json({
+            error: err
+        })
+     }
+})
