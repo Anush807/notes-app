@@ -3,20 +3,18 @@ import { signinInput, signupInput } from "../validations"
 import { PrismaClient } from "../generated/prisma/edge"
 import { withAccelerate } from "@prisma/extension-accelerate"
 import { sign } from "hono/jwt"
+import { Resend } from "resend"
 
 export const authRoute = new Hono<{
     Bindings: {
         DATABASE_URL: string,
-        JWT_SECRET: string
+        JWT_SECRET: string,
+        RESEND_API_KEY: string
     }
 }>()
 
 authRoute.post("/signup", async (c) => {
     try {
-        const prisma = new PrismaClient({
-            datasourceUrl: c.env.DATABASE_URL
-        }).$extends(withAccelerate())
-
         const body = await c.req.json();
         const signedupInput = signupInput.safeParse(body);
         if (!signedupInput.success) {
@@ -24,6 +22,9 @@ authRoute.post("/signup", async (c) => {
                 message: "Enter valid input"
             })
         }
+         const prisma = new PrismaClient({
+            datasourceUrl: c.env.DATABASE_URL
+        }).$extends(withAccelerate())
         const userExists = await prisma.user.findUnique({
             where: {
                 email: body.email
@@ -65,12 +66,37 @@ authRoute.post("/signup", async (c) => {
             data: {
                 email: body.email,
                 password: hashedPassword,
+                active: false,
                 salt: saltString,
-                createdAt: new Date()
+                createdAt: new Date(),
+            }
+        })
+        const array = new Uint8Array(16); 
+        const token = crypto.getRandomValues(array);
+
+        const actualToken = Array.from(token, b => b.toString(16).padStart(2, '0')).join('');
+        const expiry = new Date(Date.now() + 1000 * 60 * 60)
+
+        await prisma.verificationToken.create({
+            data:{
+                token: actualToken,
+                expiresAt: expiry,
+                userId: user.id
             }
         })
 
+        const resend = new Resend(c.env.RESEND_API_KEY)
+        const verificationLink =  `http://localhost:8787/api/v1/auth/verify?token=${actualToken}`
+        console.log(verificationLink)
+        await resend.emails.send({
+            from: "supernova3901@gmail.com",
+            to: user.email,
+            subject: 'Verify your email',
+            html: `<p>Click <a href="${verificationLink}">here</a> to verify your email.</p>`
+        })
+        
         console.log("User signed up successfully");
+        console.log("User verifcation email has been sent")
         try {
             const jwt = await sign({ id: user.id }, c.env.JWT_SECRET);
             return c.json({
@@ -86,6 +112,57 @@ authRoute.post("/signup", async (c) => {
             error: error
         })
     }
+})
+
+authRoute.get("/verify", async (c) => {
+    const token = c.req.query("token")
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL
+    }).$extends(withAccelerate())
+
+    try{
+         if(!token){
+            return c.json({
+                message: "no token provided"
+            })
+         }
+         const record = await prisma.verificationToken.findUnique({
+            where:{
+                token: token
+            },
+            include: {
+                user: true
+            }
+         })
+
+         if(!record) {
+            return c.json({
+                message: "Invalid verification"
+            })
+         }
+
+         await prisma.user.update({
+            where:{
+                id: record.userId
+            },
+            data:{
+                active: true
+            }
+         })
+         await prisma.verificationToken.delete({
+            where:{
+                id: record.id
+            }
+         })
+         return c.json({
+            message: "Email verified successfully"
+         })
+    }catch(err){
+        return c.json({
+            error: err
+        }) 
+    }
+   
 })
 
 authRoute.post("/signin", async (c) => {

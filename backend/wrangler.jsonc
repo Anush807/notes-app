@@ -8,7 +8,8 @@
   // ],
   "vars": {
     "DATABASE_URL":"prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3RfaWQiOjEsInNlY3VyZV9rZXkiOiJza182U2ctTExiZXNubTBEYWNMZGpFRWciLCJhcGlfa2V5IjoiMDFLNjlXWkFaUENFVjBHUFZaUlE5OTFRMVAiLCJ0ZW5hbnRfaWQiOiJlNjFlMzZhZWIxNDZiMWIyYjVlNDNhYzcxZGUwZmM4ZTExYjVjZDcyOTI2MDFkMjhlNDc1OTM4YjZmNzg3ZGVmIiwiaW50ZXJuYWxfc2VjcmV0IjoiZTUwYTViYWQtMTgxZC00MzUxLTlhZWMtNGZhMmQ5MjU0ZjEyIn0.lex90abjqSYbaRxZ6sGrOuTAZSYuMrkxnRpoCuq_Y6Y",
-    "JWT_SECRET": "anushnotesapp"
+    "JWT_SECRET": "anushnotesapp",
+    "RESEND_API_KEY": "re_db5tNCJA_8jt4qWu3oxqB8yTNsReGb3VT"
   },
   // "kv_namespaces": [
   //   {

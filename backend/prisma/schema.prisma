@@ -18,15 +18,25 @@ datasource db {
 
 
 model User{
-  id        String    @id @default(uuid())
-  email     String    @unique
-  password  String
-  salt      String
-  notes     Notes[]
-  createdAt DateTime
+  id                 String    @id @default(uuid())
+  email              String    @unique
+  password           String
+  active             Boolean   @default(false)
+  verificationTokens verificationToken[] 
+  salt               String
+  notes              Notes[]
+  createdAt          DateTime
 }
 
-model Notes{
+model verificationToken{
+  id                 String     @id @default(uuid())
+  token              String     @unique
+  expiresAt          DateTime
+  userId             String
+  user               User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Notes{  
   id          String   @id @default(uuid())
   title       String    
   content     String
