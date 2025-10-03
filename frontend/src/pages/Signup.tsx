@@ -1,14 +1,11 @@
-import { Signup1 } from "../Components/Sign";
+import SignupComponentDemo from '../components/SignupComponent'
 
-const SignupPage = () => {
+function Signup() {
   return (
-    <Signup1 logo={{
-          url: "",
-          src: "",
-          alt: "",
-          title: undefined
-      }} />
-  );
-};
+    <div>
+      <SignupComponentDemo></SignupComponentDemo>
+    </div>
+  )
+}
 
-export { SignupPage };
+export default Signup
