@@ -100,7 +100,8 @@ authRoute.post("/signup", async (c) => {
         try {
             const jwt = await sign({ id: user.id }, c.env.JWT_SECRET);
             return c.json({
-                token: jwt
+                token: jwt,
+                user
             })
         } catch (err) {
             return c.json({

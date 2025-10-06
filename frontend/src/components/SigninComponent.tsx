@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Mail, Lock } from 'lucide-react'
 import axios from 'axios'
@@ -102,6 +102,14 @@ function SigninComponent({ onSubmit }: SigninComponentProps = {}) {
   const [focusedField, setFocusedField] = useState<string | null>(null)
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      navigate("/dashboard");
+    }
+  })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -235,7 +243,7 @@ function SigninComponent({ onSubmit }: SigninComponentProps = {}) {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-400">
               Don't have an account?{' '}
-              <a  onClick={() => {
+              <a onClick={() => {
                 navigate("/signup")
               }} href="#" className="text-white hover:underline">
                 Sign up

@@ -1,1 +1,71 @@
 @import "tailwindcss";
+
+/* Tailwind v4 Theme Configuration */
+@theme {
+  /* Custom colors for components */
+  --color-primary: #1e293b;
+  --color-primary-foreground: #f8fafc;
+  
+  /* Custom keyframe animations */
+  --animate-pulse-slow: pulse-slow 3s ease-in-out infinite;
+  
+  /* Define keyframes in @theme */
+  @keyframes pulse-slow {
+    0%, 100% {
+      transform: translateX(-100%);
+    }
+    50% {
+      transform: translateX(100%);
+    }
+  }
+  
+  @keyframes shine {
+    0% {
+      transform: translateX(-100%);
+    }
+    50% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+}
+
+/* Base styles */
+@layer base {
+  * {
+    border-color: oklch(0.9 0 0);
+  }
+  
+  body {
+    background-color: oklch(1 0 0);
+    color: oklch(0.2 0 0);
+  }
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+  @layer base {
+    * {
+      border-color: oklch(0.3 0 0);
+    }
+    
+    body {
+      background-color: oklch(0.15 0 0);
+      color: oklch(0.95 0 0);
+    }
+  }
+}
+
+/* Dark mode class override */
+.dark {
+  * {
+    border-color: oklch(0.3 0 0);
+  }
+  
+  body {
+    background-color: oklch(0.15 0 0);
+    color: oklch(0.95 0 0);
+  }
+}

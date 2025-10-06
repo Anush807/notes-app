@@ -1,9 +1,9 @@
-import Editor from "../components/NoteEditor"
+import Greeting from "../components/Greeting"
 
 function Dashboard() {
   return (
     <div>
-      <Editor></Editor>
+      <Greeting></Greeting>
     </div>
   )
 }
