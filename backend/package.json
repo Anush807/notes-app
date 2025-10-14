@@ -9,6 +9,7 @@
   "dependencies": {
     "@prisma/client": "^6.16.2",
     "@prisma/extension-accelerate": "^2.0.2",
+    "axios": "^1.12.2",
     "hono": "^4.9.8",
     "prisma": "^6.16.2",
     "resend": "^6.1.1"
