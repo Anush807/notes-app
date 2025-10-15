@@ -127,7 +127,7 @@ function SignupComponent({ onSubmit }: SignupComponentProps = {}) {
   }
 
   return (
-    <div className="relative flex min-h-screen w-full items-center justify-center bg-black p-4">
+    <div className="relative flex min-h-screen w-full items-center justify-center bg-black p-4 ">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute inset-0" style={{
           backgroundImage: `
