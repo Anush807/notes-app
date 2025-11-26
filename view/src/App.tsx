@@ -2,13 +2,15 @@ import { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import Editor from './components/Editor';
 import Toolbar from './components/Toolbar';
+import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [currentPage, setCurrentPage] = useState('Getting Started');
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
+    <BrowserRouter>
+      <div className="min-h-screen bg-slate-50 flex">
       <Sidebar
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -24,7 +26,9 @@ function App() {
         <Editor currentPage={currentPage} />
       </main>
     </div>
-  );
+    </BrowserRouter>
+  )
+    
 }
 
 export default App;
